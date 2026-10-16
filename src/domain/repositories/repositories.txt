@@ -1,0 +1,9 @@
+Folder: repositories
+Fungsi Utama:
+Mendefinisikan kontrak atau interface abstraksi untuk operasi persistensi data (repository pattern).
+Mengatur method apa saja yang harus diimplementasikan oleh adapter penyimpanan di layer infrastructure.
+
+Aturan Ketergantungan (Dependency Rule):
+- Hanya boleh menggunakan tipe data dari folder entities atau tipe primitif TypeScript.
+- Berisi TypeScript `interface` atau `type`, BUKAN implementasi query/ORM langsung.
+- Menerapkan Dependency Inversion Principle (DIP): use case bergantung pada abstraksi ini, bukan Drizzle secara langsung.

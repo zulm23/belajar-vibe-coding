@@ -1,0 +1,9 @@
+Folder: infrastructure
+Fungsi Utama:
+Layer terluar dari Clean Architecture (Frameworks, Drivers, Tools & External Services).
+Berisi detail teknis implementasi konkret seperti koneksi database Drizzle, driver PostgreSQL, konfigurasi lingkungan, integrasi API pihak ketiga, dsb.
+
+Aturan Ketergantungan (Dependency Rule):
+- Layer ini mengimplementasikan interface yang didefinisikan pada layer `domain`.
+- Dapat mengimpor dari layer `domain` dan `shared`.
+- Kode bisnis tidak boleh bergantung langsung pada detail implementasi di folder ini, melainkan melalui abstraksi (DIP).

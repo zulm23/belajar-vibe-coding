@@ -1,0 +1,8 @@
+Folder: controllers
+Fungsi Utama:
+Berisi handler fungsi untuk memproses HTTP request, memvalidasi input sederhana, mengeksekusi use case terkait, dan mengembalikan HTTP response yang sesuai.
+
+Aturan Ketergantungan (Dependency Rule):
+- Memanggil `use-cases` untuk eksekusi logika aplikasi.
+- Bertanggung jawab memetakan error atau data hasil dari use case menjadi format HTTP response (status code 200, 400, 500, JSON payload).
+- Tidak boleh mengeksekusi query database langsung.

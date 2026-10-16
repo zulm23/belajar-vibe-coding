@@ -1,0 +1,10 @@
+Folder: use-cases
+Fungsi Utama:
+Folder ini merepresentasikan Application Business Rules.
+Berisi skenario penggunaan aplikasi yang mengorkestrasi alur data antara entitas domain dan interface repository.
+Contoh: CheckDbHealthUseCase, RegisterUserUseCase, GetUserProfileUseCase.
+
+Aturan Ketergantungan (Dependency Rule):
+- Boleh mengimpor dari layer `domain` (entities dan repository interfaces).
+- TIDAK BOLEH mengimpor langsung dari layer luar seperti `infrastructure` (Drizzle, raw SQL) atau `interfaces` (Elysia context, HTTP req/res).
+- Dependensi ke repository disuntikkan via Dependency Injection (constructor / parameter).

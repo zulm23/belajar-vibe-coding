@@ -1,0 +1,9 @@
+Folder: domain
+Fungsi Utama:
+Folder ini merepresentasikan inti dari Clean Architecture (Enterprise Business Rules).
+Berisi model bisnis, entitas, dan definisi interface/kontrak repository yang murni serta independen.
+
+Aturan Ketergantungan (Dependency Rule):
+- Layer domain TIDAK BOLEH mengimpor kode dari layer luar (use-cases, interfaces, infrastructure).
+- Layer ini tidak bergantung pada framework (Elysia), ORM (Drizzle), atau database driver (postgres).
+- Semua layer lain boleh bergantung pada layer domain.

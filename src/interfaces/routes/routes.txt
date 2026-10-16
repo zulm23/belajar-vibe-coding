@@ -1,0 +1,8 @@
+Folder: routes
+Fungsi Utama:
+Mendefinisikan endpoint URL, metode HTTP (GET, POST, PUT, DELETE), serta memasangkan route dengan controller atau handler yang relevan di framework ElysiaJS.
+
+Aturan Ketergantungan (Dependency Rule):
+- Menggunakan ElysiaJS instance untuk deklarasi route.
+- Mengarahkan request ke controller terkait.
+- Tidak boleh berisi query database langsung atau manipulasi state aplikasi secara mendalam.

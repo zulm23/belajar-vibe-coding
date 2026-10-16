@@ -1,0 +1,9 @@
+Folder: db
+Fungsi Utama:
+Mengelola koneksi database PostgreSQL menggunakan client `postgres` dan ORM `drizzle-orm`.
+Menyimpan definisi skema tabel database konkret (`schema.ts`) serta instance database client (`index.ts`).
+
+Aturan Ketergantungan (Dependency Rule):
+- Menggunakan driver `postgres` dan fungsi dari `drizzle-orm/postgres-js`.
+- Mendefinisikan tabel dan kolom fisik di database.
+- Boleh mengimpor konfigurasi koneksi atau environment variables.

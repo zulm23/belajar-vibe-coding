@@ -1,0 +1,8 @@
+Folder: entities
+Fungsi Utama:
+Menyimpan definisi entitas domain dan model data bisnis murni dalam bentuk TypeScript types atau classes.
+Merepresentasikan objek bisnis utama dalam aplikasi (contoh: User, HealthStatus).
+
+Aturan Ketergantungan (Dependency Rule):
+- Hanya boleh berisi logika bisnis inti dan tipe data murni.
+- Tidak boleh memiliki dependensi ke database, framework HTTP, atau layer luar manapun.

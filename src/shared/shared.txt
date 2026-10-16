@@ -1,0 +1,7 @@
+Folder: shared
+Fungsi Utama:
+Menyimpan modul pendukung yang dapat digunakan lintas layer, seperti helper utilities, custom error definitions, response wrapper, logging, dan konstanta global.
+
+Aturan Ketergantungan (Dependency Rule):
+- Berisi kode modular dan umum yang tidak terikat pada framework atau fitur bisnis tertentu.
+- Tidak boleh memuat dependensi sirkular atau logika bisnis kompleks.

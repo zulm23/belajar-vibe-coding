@@ -1,0 +1,9 @@
+Folder: repositories (infrastructure)
+Fungsi Utama:
+Menyediakan implementasi konkret dari repository interface yang didefinisikan di `domain/repositories`.
+Menjalankan query database nyata ke PostgreSQL menggunakan instance Drizzle ORM.
+
+Aturan Ketergantungan (Dependency Rule):
+- Mengimplementasikan `interface` dari `src/domain/repositories/`.
+- Menggunakan instance database Drizzle dari `src/infrastructure/db/`.
+- Memetakan hasil query database menjadi entitas domain murni.

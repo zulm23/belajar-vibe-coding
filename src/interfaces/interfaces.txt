@@ -1,0 +1,9 @@
+Folder: interfaces
+Fungsi Utama:
+Folder ini adalah Interface Adapters / Presentation Layer.
+Bertugas mengonversi format data dari dunia luar (HTTP requests, routing, parameter query) ke bentuk yang dimengerti oleh use cases, dan memformat kembali hasil output (JSON response, status code).
+
+Aturan Ketergantungan (Dependency Rule):
+- Boleh mengimpor dan memanggil layer `use-cases` serta layer `domain`.
+- Dapat menggunakan framework HTTP seperti ElysiaJS untuk definisi route dan request parsing.
+- Tidak boleh berisi logika bisnis murni ataupun query database SQL secara langsung.
