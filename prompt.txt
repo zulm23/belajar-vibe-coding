@@ -1,4 +1,4 @@
-buatkan issue.md, berisi planning untuk membuat ini :
+=== buatkan issue.md, berisi planning untuk membuat ini :
 
 buat project baru di folder ini
 
@@ -22,3 +22,34 @@ cukup instruksikan secara high level
 
 nanti dokumen planning nya tersebut akan di gunakan oleh programer atau dengan model yang murah
 untuk di implementasikan
+
+
+=== submit issue.md sebagai github issue baru
+
+=== kerjakan github issue : https://github.com/zulm23/belajar-vibe-coding/issues/2
+
+
+==========
+=== buatkan issue.md (timpa jika sudah ada) yang berisi perencanaan yang nanti akan di implementasikan oleh junior programer atau ai model yang lebih murah
+
+isi dari planning nya adalah sebagai berikut:
+
+- buat atau update tabel users:
+ id - integer - auto increment - primaty key
+ name - varchar - 255 - not null
+ email - varchar - 150 - not null - unique
+ password - varchar - 255 - not null (password merupakan hash dari bcript)
+ created_at - timestamp - default now() - not null
+
+- buatkan Endpoint untuk fitur users : Create, Read, Update, Delete
+untuk response di buat standart programer yang dapat menghandle ketika success atau error 
+
+- letakan file dalam folder sesuai konsep clean architecture agar mudah di scale dam maintence dan penamaannya di sesuaikan misal users-route.ts atau user-service.ts dan lain lain
+
+jelaskan tahapan-tahapan yang harus dilakukan untuk mengimplementasikan fitur ini. agar dapat di implementasikan oleh junior programer atau ai model yang lebih murah
+
+
+=== submit issue.md sebagai github issue baru
+
+=== buat branch feature/registration-user lalu implementasikan @issue.md pada branch tersebut
+lalu commit dan buatkan PR ke branch main
