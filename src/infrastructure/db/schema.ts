@@ -1,4 +1,4 @@
-import { pgTable, serial, text, timestamp, boolean } from "drizzle-orm/pg-core";
+import { pgTable, serial, text, timestamp, varchar } from "drizzle-orm/pg-core";
 
 export const healthChecks = pgTable("health_checks", {
   id: serial("id").primaryKey(),
@@ -9,7 +9,8 @@ export const healthChecks = pgTable("health_checks", {
 
 export const users = pgTable("users", {
   id: serial("id").primaryKey(),
-  name: text("name").notNull(),
-  email: text("email").notNull().unique(),
+  name: varchar("name", { length: 255 }).notNull(),
+  email: varchar("email", { length: 150 }).notNull().unique(),
+  password: varchar("password", { length: 255 }).notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
