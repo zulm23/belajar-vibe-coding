@@ -1,0 +1,24 @@
+buatkan issue.md, berisi planning untuk membuat ini :
+
+buat project baru di folder ini
+
+menggunakan BUN
+
+dan gunakanan dependency :
+-- elysiaJS
+-- Drizzle
+-- postgresql
+
+buatkan docker compose untuk menjalankan : 
+postgresql dan buat database dengan nama "vibe_coding_db"
+dengan password "Rahasia12345"
+ 
+struktur foldernya sesuai clean architecture agar mudah di scale dan mudah di maintence 
+dan tambahkan penjelasan fungsi atau kegunaan folder nya pada masing-masing folder menggunakan namafolder.txt
+
+Jangan terlalu low level atau detail
+
+cukup instruksikan secara high level
+
+nanti dokumen planning nya tersebut akan di gunakan oleh programer atau dengan model yang murah
+untuk di implementasikan
