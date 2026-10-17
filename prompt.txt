@@ -1,4 +1,5 @@
-=== buatkan issue.md, berisi planning untuk membuat ini :
+===  Initial ===
+buatkan issue.md, berisi perencanaan untuk membuat ini :
 
 buat project baru di folder ini
 
@@ -53,3 +54,30 @@ jelaskan tahapan-tahapan yang harus dilakukan untuk mengimplementasikan fitur in
 
 === buat branch feature/registration-user lalu implementasikan @issue.md pada branch tersebut
 lalu commit dan buatkan PR ke branch main
+
+=== kembali ke branch main, pull terbaru
+
+https://youtu.be/2hiaZghRYHk?t=3587
+
+=====================================================================================================
+===  FITUR LOGIN ===
+buatkan issue.md (timpa jika sudah ada ), berisi perencanaan untuk untuk nanti di implementasikan oleh junior programer atau ai yang lebih murah.
+isi dari planning nya adalah sebagai berikut :
+
+buat table sessions dengan data :
+id - int - auto increment - primary key
+token - varchar - 255 - not null (isinya UUID untuk token user yang login)
+user_id - int - not null (FK ke table users)
+created_at - timestamp - default now() - not null
+
+buatkan Endpoint untuk registration user (CRUD)
+ 
+struktur foldernya sesuai clean architecture agar mudah di scale dan mudah di maintence 
+
+Jelaskan tahapan-tahapan yang harus dilakukan untuk nanti mengimplementasikan fitur ini oleh junior programer atau ai yang lebih murah.
+
+=== buatkan issue baru di github dari issue.md
+
+=== implementasikan [issue.md](file;file:///c%3A/Users/Keuangan-SMAITFD/flutter/vibe%20coder/issue.md)  dan berikan ketetrangan pada class atau function dengan jelas
+
+=== commit branch saat ini, lalu buatkan PR ke github,

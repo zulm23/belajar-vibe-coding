@@ -2,9 +2,20 @@ import type { UserService } from "../../use-cases/user-service";
 import { successResponse, errorResponse } from "../../shared/api-response";
 import type { CreateUserDto, UpdateUserDto } from "../../domain/entities/user.entity";
 
+/**
+ * Controller untuk menangani permintaan HTTP endpoint CRUD User (/users).
+ */
 export class UserController {
+  /**
+   * Menginisialisasi UserController dengan instance UserService.
+   * @param userService Service penyedia logika bisnis User
+   */
   constructor(private readonly userService: UserService) {}
 
+  /**
+   * Handler untuk membuat user baru (POST /users).
+   * @param ctx Context Elysia berisi body dan setter status HTTP
+   */
   async createUser({ body, set }: { body: CreateUserDto; set: any }) {
     try {
       if (!body || !body.name || !body.email || !body.password) {
@@ -31,6 +42,10 @@ export class UserController {
     }
   }
 
+  /**
+   * Handler untuk mengambil seluruh data user (GET /users).
+   * @param ctx Context Elysia berisi setter status HTTP
+   */
   async getAllUsers({ set }: { set: any }) {
     try {
       const users = await this.userService.getAllUsers();
@@ -42,6 +57,10 @@ export class UserController {
     }
   }
 
+  /**
+   * Handler untuk mengambil detail user berdasarkan ID (GET /users/:id).
+   * @param ctx Context Elysia berisi parameter ID dan setter status HTTP
+   */
   async getUserById({ params, set }: { params: { id: string }; set: any }) {
     try {
       const id = Number(params.id);
@@ -64,6 +83,10 @@ export class UserController {
     }
   }
 
+  /**
+   * Handler untuk memperbarui data user (PUT /users/:id).
+   * @param ctx Context Elysia berisi params ID, body, dan setter status HTTP
+   */
   async updateUser({
     params,
     body,
@@ -106,6 +129,10 @@ export class UserController {
     }
   }
 
+  /**
+   * Handler untuk menghapus user (DELETE /users/:id).
+   * @param ctx Context Elysia berisi params ID dan setter status HTTP
+   */
   async deleteUser({ params, set }: { params: { id: string }; set: any }) {
     try {
       const id = Number(params.id);
@@ -128,3 +155,4 @@ export class UserController {
     }
   }
 }
+
