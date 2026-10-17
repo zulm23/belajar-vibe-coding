@@ -1,6 +1,7 @@
 import type { UserService } from "../../use-cases/user-service";
 import { successResponse, errorResponse } from "../../shared/api-response";
 import type { CreateUserDto, UpdateUserDto } from "../../domain/entities/user.entity";
+import { AppError } from "../../shared/errors";
 
 /**
  * Controller untuk menangani permintaan HTTP endpoint CRUD User (/users).
@@ -18,24 +19,18 @@ export class UserController {
    */
   async createUser({ body, set }: { body: CreateUserDto; set: any }) {
     try {
-      if (!body || !body.name || !body.email || !body.password) {
+      if (!body) {
         set.status = 400;
-        return errorResponse("Missing required fields: name, email, and password are required");
-      }
-
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      if (!emailRegex.test(body.email)) {
-        set.status = 400;
-        return errorResponse("Invalid email format");
+        return errorResponse("Request body is required");
       }
 
       const user = await this.userService.createUser(body);
       set.status = 201;
       return successResponse("User successfully created", user);
     } catch (err: any) {
-      if (err.message === "EMAIL_EXISTS") {
-        set.status = 409;
-        return errorResponse("Email is already registered");
+      if (err instanceof AppError) {
+        set.status = err.statusCode;
+        return errorResponse(err.message, err.details);
       }
       set.status = 500;
       return errorResponse("Internal server error", err.message);
@@ -52,6 +47,10 @@ export class UserController {
       set.status = 200;
       return successResponse("Users retrieved successfully", users);
     } catch (err: any) {
+      if (err instanceof AppError) {
+        set.status = err.statusCode;
+        return errorResponse(err.message, err.details);
+      }
       set.status = 500;
       return errorResponse("Internal server error", err.message);
     }
@@ -78,6 +77,10 @@ export class UserController {
       set.status = 200;
       return successResponse("User retrieved successfully", user);
     } catch (err: any) {
+      if (err instanceof AppError) {
+        set.status = err.statusCode;
+        return errorResponse(err.message, err.details);
+      }
       set.status = 500;
       return errorResponse("Internal server error", err.message);
     }
@@ -103,26 +106,18 @@ export class UserController {
         return errorResponse("Invalid user ID parameter");
       }
 
-      if (body.email) {
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailRegex.test(body.email)) {
-          set.status = 400;
-          return errorResponse("Invalid email format");
-        }
+      if (!body) {
+        set.status = 400;
+        return errorResponse("Request body is required");
       }
 
       const updated = await this.userService.updateUser(id, body);
-      if (!updated) {
-        set.status = 404;
-        return errorResponse("User not found");
-      }
-
       set.status = 200;
       return successResponse("User updated successfully", updated);
     } catch (err: any) {
-      if (err.message === "EMAIL_EXISTS") {
-        set.status = 409;
-        return errorResponse("Email is already registered by another user");
+      if (err instanceof AppError) {
+        set.status = err.statusCode;
+        return errorResponse(err.message, err.details);
       }
       set.status = 500;
       return errorResponse("Internal server error", err.message);
@@ -150,6 +145,10 @@ export class UserController {
       set.status = 200;
       return successResponse("User deleted successfully");
     } catch (err: any) {
+      if (err instanceof AppError) {
+        set.status = err.statusCode;
+        return errorResponse(err.message, err.details);
+      }
       set.status = 500;
       return errorResponse("Internal server error", err.message);
     }

@@ -1,7 +1,8 @@
 import type { AuthService } from "../../use-cases/auth-service";
 import { successResponse, errorResponse } from "../../shared/api-response";
 import type { CreateUserDto } from "../../domain/entities/user.entity";
-import type { LoginDto } from "../../domain/entities/session.entity";
+import type { DeviceInfo, LoginDto } from "../../domain/entities/session.entity";
+import { AppError } from "../../shared/errors";
 
 /**
  * Controller untuk menangani request dan response HTTP pada endpoint autentikasi (/auth).
@@ -39,24 +40,18 @@ export class AuthController {
    */
   async register({ body, set }: { body: CreateUserDto; set: any }) {
     try {
-      if (!body || !body.name || !body.email || !body.password) {
+      if (!body) {
         set.status = 400;
-        return errorResponse("Missing required fields: name, email, and password are required");
-      }
-
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      if (!emailRegex.test(body.email)) {
-        set.status = 400;
-        return errorResponse("Invalid email format");
+        return errorResponse("Request body is required");
       }
 
       const user = await this.authService.register(body);
       set.status = 201;
       return successResponse("User registration successful", user);
     } catch (err: any) {
-      if (err.message === "EMAIL_EXISTS") {
-        set.status = 409;
-        return errorResponse("Email is already registered");
+      if (err instanceof AppError) {
+        set.status = err.statusCode;
+        return errorResponse(err.message, err.details);
       }
       set.status = 500;
       return errorResponse("Internal server error", err.message);
@@ -64,25 +59,76 @@ export class AuthController {
   }
 
   /**
-   * Handler untuk login pengguna (POST /auth/login).
-   * Memvalidasi kredensial email & password, mengembalikan token sesi UUID jika berhasil.
-   * @param ctx Objek context Elysia berisi request body dan setter status response
-   * @returns ApiResponse dengan token sesi dan data user, atau status 401 jika kredensial salah
+   * Helper privat untuk mengekstrak informasi perangkat (device) dari request headers & body.
+   * @param headers Objek request headers
+   * @param bodyDevice Data device opsional dari request body
+   * @returns Objek DeviceInfo yang telah diparsing
    */
-  async login({ body, set }: { body: LoginDto; set: any }) {
+  private extractDeviceInfo(
+    headers: Record<string, string | undefined>,
+    bodyDevice?: Partial<DeviceInfo>
+  ): DeviceInfo {
+    const userAgent =
+      bodyDevice?.userAgent || headers["user-agent"] || headers["User-Agent"] || "Unknown Device";
+    const ipAddress =
+      bodyDevice?.ipAddress ||
+      headers["x-forwarded-for"] ||
+      headers["x-real-ip"] ||
+      "127.0.0.1";
+
+    let platform = bodyDevice?.platform || "Unknown Platform";
+    if (!bodyDevice?.platform && userAgent) {
+      if (/windows/i.test(userAgent)) platform = "Windows";
+      else if (/android/i.test(userAgent)) platform = "Android";
+      else if (/iphone|ipad|ipod/i.test(userAgent)) platform = "iOS";
+      else if (/macintosh|mac os x/i.test(userAgent)) platform = "macOS";
+      else if (/linux/i.test(userAgent)) platform = "Linux";
+    }
+
+    return {
+      userAgent,
+      ipAddress,
+      platform,
+    };
+  }
+
+  /**
+   * Handler untuk login pengguna (POST /auth/login).
+   * Memvalidasi kredensial email & password, mengembalikan token sesi JWT dengan payload
+   * yang memuat data profil pengguna dan data device yang sedang digunakan.
+   *
+   * @param ctx Objek context Elysia berisi request body, request headers, dan setter status response
+   * @returns ApiResponse dengan token sesi JWT, decoded payload, dan data user
+   */
+  async login({
+    body,
+    headers,
+    set,
+  }: {
+    body: LoginDto;
+    headers?: Record<string, string | undefined>;
+    set: any;
+  }) {
     try {
       if (!body || !body.email || !body.password) {
         set.status = 400;
         return errorResponse("Email and password are required");
       }
 
-      const result = await this.authService.login(body);
+      // Deteksi dan ekstrak informasi perangkat dari header dan body
+      const device = this.extractDeviceInfo(headers || {}, body.device);
+
+      const result = await this.authService.login({
+        ...body,
+        device,
+      });
+
       set.status = 200;
       return successResponse("Login successful", result);
     } catch (err: any) {
-      if (err.message === "INVALID_CREDENTIALS") {
-        set.status = 401;
-        return errorResponse("Invalid email or password");
+      if (err instanceof AppError) {
+        set.status = err.statusCode;
+        return errorResponse(err.message, err.details);
       }
       set.status = 500;
       return errorResponse("Internal server error", err.message);
@@ -112,6 +158,10 @@ export class AuthController {
       set.status = 200;
       return successResponse("Active session profile retrieved", user);
     } catch (err: any) {
+      if (err instanceof AppError) {
+        set.status = err.statusCode;
+        return errorResponse(err.message, err.details);
+      }
       set.status = 500;
       return errorResponse("Internal server error", err.message);
     }
@@ -140,6 +190,10 @@ export class AuthController {
       set.status = 200;
       return successResponse("Logout successful");
     } catch (err: any) {
+      if (err instanceof AppError) {
+        set.status = err.statusCode;
+        return errorResponse(err.message, err.details);
+      }
       set.status = 500;
       return errorResponse("Internal server error", err.message);
     }

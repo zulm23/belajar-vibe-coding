@@ -1,3 +1,5 @@
+=== BUAT PLANNING DAN CODE ===
+
 ===  Initial ===
 buatkan issue.md, berisi perencanaan untuk membuat ini :
 
@@ -81,3 +83,38 @@ Jelaskan tahapan-tahapan yang harus dilakukan untuk nanti mengimplementasikan fi
 === implementasikan [issue.md](file;file:///c%3A/Users/Keuangan-SMAITFD/flutter/vibe%20coder/issue.md)  dan berikan ketetrangan pada class atau function dengan jelas
 
 === commit branch saat ini, lalu buatkan PR ke github,
+
+=== pindah ke branch main, lalu pull yang terbaru
+
+=== update token pada auth-service.ts menggunakan JWT (JSON Web Token) dangap payload berisi data yang sedang login termasuk data device yang di gunakannya
+
+
+
+=== CODE REVIEW ===
+- Review code untuk best practies menggunakan ai agent yang lain
+- minta saran dan optimasi performa
+- refactor code legacy
+
+
+=== DEBUGGING AND TROUBLESHOOTING ===
+- Jelaskan error  dan dapatkan solusi
+- trace bug yang sulit di temukan
+- minta ai untuk melakukan debugging kenapa masalah ini terjadi, dan minta untuk memperbaiki permasalahannya.
+
+misal : coba jalankan aplikasinya, lalu coba registrasi user baru dengan nama panjangnya 300 karakter
+perbaikan : validasi setiap inputan user dan sesuaikan seperti data yang ada di database. buat standart Error, misal DatabaseError jika terjadi error di database
+
+=== UNIT TEST ===
+- buatkan ai untuk generate unit test nya dengan berbagai skenario dari aplikasi yang sudah dibuat
+
+== PLANNING
+buatkan issue.md (timpa jika sudah ada) yang berisi perencanaan untuk nanti di implementasikan oleh junior programer atau ai yang lebih murah
+isi dari plann nya adalah sebagai berikut :
+- buatkan unit test untuk seun=ma API yang tersedia
+- simpan di folder tests, menggunakan but test dan kelompokan sesuai endpoint nya
+- setiap skenarion, hapus datanya terlebih dahulu agar konsisten
+- buat skenarion test per API selengkap mungkin
+- jangan buatkan terlalu detail instruksi unit testnya, buatkan apa saja yang harus di test dengan lengkap. biarkan nanti yang implementsi dari juniopr programer atau ai yang lebih murah
+
+
+https://youtu.be/2hiaZghRYHk?t=6454

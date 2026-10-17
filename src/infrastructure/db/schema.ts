@@ -27,7 +27,7 @@ export const users = pgTable("users", {
  */
 export const sessions = pgTable("sessions", {
   id: serial("id").primaryKey(),
-  token: varchar("token", { length: 255 }).notNull().unique(),
+  token: text("token").notNull().unique(),
   userId: integer("user_id")
     .notNull()
     .references(() => users.id, { onDelete: "cascade" }),

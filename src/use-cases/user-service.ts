@@ -5,6 +5,12 @@ import type {
   User,
   UserResponse,
 } from "../domain/entities/user.entity";
+import { ConflictError, NotFoundError } from "../shared/errors";
+import {
+  validateUserEmail,
+  validateUserName,
+  validateUserPassword,
+} from "../shared/validators";
 
 /**
  * Service pengelola logika bisnis untuk entitas User (CRUD).
@@ -27,25 +33,31 @@ export class UserService {
   }
 
   /**
-   * Membuat pengguna baru (registrasi) dengan password yang di-hash menggunakan bcrypt.
+   * Membuat pengguna baru (registrasi) dengan validasi field ketat sesuai batasan database.
+   * Password di-hash menggunakan bcrypt.
    * @param dto Data nama, email, dan password
    * @returns Data profil user baru
-   * @throws Error "EMAIL_EXISTS" jika email sudah digunakan
+   * @throws ValidationError jika ada field tidak valid atau melebihi limit kolom DB
+   * @throws ConflictError jika email sudah digunakan
    */
   async createUser(dto: CreateUserDto): Promise<UserResponse> {
-    const existing = await this.userRepo.findByEmail(dto.email);
+    const validName = validateUserName(dto.name);
+    const validEmail = validateUserEmail(dto.email);
+    const validPassword = validateUserPassword(dto.password);
+
+    const existing = await this.userRepo.findByEmail(validEmail);
     if (existing) {
-      throw new Error("EMAIL_EXISTS");
+      throw new ConflictError("Email is already registered");
     }
 
-    const hashedPassword = await Bun.password.hash(dto.password, {
+    const hashedPassword = await Bun.password.hash(validPassword, {
       algorithm: "bcrypt",
       cost: 10,
     });
 
     const created = await this.userRepo.create({
-      name: dto.name,
-      email: dto.email,
+      name: validName,
+      email: validEmail,
       password: hashedPassword,
     });
 
@@ -73,35 +85,49 @@ export class UserService {
   }
 
   /**
-   * Memperbarui profil atau password user.
+   * Memperbarui profil atau password user dengan validasi batasan kolom database.
    * @param id ID user
    * @param dto Data pembaruan
-   * @returns UserResponse setelah diupdate, atau null jika ID user tidak ada
-   * @throws Error "EMAIL_EXISTS" jika email baru telah digunakan oleh user lain
+   * @returns UserResponse setelah diupdate
+   * @throws NotFoundError jika user tidak ada
+   * @throws ConflictError jika email baru telah digunakan oleh user lain
+   * @throws ValidationError jika data tidak memenuhi constraint
    */
-  async updateUser(id: number, dto: UpdateUserDto): Promise<UserResponse | null> {
+  async updateUser(id: number, dto: UpdateUserDto): Promise<UserResponse> {
     const existing = await this.userRepo.findById(id);
-    if (!existing) return null;
-
-    if (dto.email && dto.email !== existing.email) {
-      const emailInUse = await this.userRepo.findByEmail(dto.email);
-      if (emailInUse) {
-        throw new Error("EMAIL_EXISTS");
-      }
+    if (!existing) {
+      throw new NotFoundError("User not found");
     }
 
     const updateData: Partial<Omit<User, "id" | "createdAt">> = {};
-    if (dto.name !== undefined) updateData.name = dto.name;
-    if (dto.email !== undefined) updateData.email = dto.email;
+
+    if (dto.name !== undefined) {
+      updateData.name = validateUserName(dto.name);
+    }
+
+    if (dto.email !== undefined) {
+      const validEmail = validateUserEmail(dto.email);
+      if (validEmail !== existing.email) {
+        const emailInUse = await this.userRepo.findByEmail(validEmail);
+        if (emailInUse) {
+          throw new ConflictError("Email is already registered by another user");
+        }
+      }
+      updateData.email = validEmail;
+    }
+
     if (dto.password !== undefined && dto.password.trim() !== "") {
-      updateData.password = await Bun.password.hash(dto.password, {
+      const validPassword = validateUserPassword(dto.password);
+      updateData.password = await Bun.password.hash(validPassword, {
         algorithm: "bcrypt",
         cost: 10,
       });
     }
 
     const updated = await this.userRepo.update(id, updateData);
-    if (!updated) return null;
+    if (!updated) {
+      throw new NotFoundError("User not found");
+    }
 
     return this.sanitizeUser(updated);
   }
@@ -117,4 +143,5 @@ export class UserService {
     return await this.userRepo.delete(id);
   }
 }
+
 
